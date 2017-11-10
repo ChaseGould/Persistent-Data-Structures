@@ -5,14 +5,17 @@ public class LinkedList<E extends Comparable> {
 		private final Node head;
 		private final int size;
 		
-		
-		
-	
-
-		public LinkedList (Node<E> inputNode)
+		public LinkedList ()
 		{
-			this.head = new Node<E>(null, inputNode);
-			inputNode = new Node<E>(inputNode.getElement(), null);
+			this.head = new Node<E>(null, null);
+			this.size = 0;
+		}
+
+		//note sure if this constructor is necessary
+		public LinkedList (Object element)
+		{
+			Node<E> temp = new Node(element, null);
+			this.head = new Node<E>(null, temp);
 			this.size = 1;
 		}
 		
@@ -37,23 +40,35 @@ public class LinkedList<E extends Comparable> {
 			}
 		}//end of method
 		
-		public LinkedList AddToList(E input)
+		public LinkedList AddToList(Object input)
 		{
-			/*convert this list to an array
-			 * add the input to the end of the array
-			 * pass array to constructor to make a new list
-			 */
-			
+			Node<E> temp = new Node(input, null);
 			Object[] original = this.toArray();
-			Object[] newValue = new Object[] {input};
-			return new LinkedList<E>(addAll(original, newValue));
+			Object[] newElement = new Object[] {temp};
+			return new LinkedList<E>(addAll(original, newElement));
 		}
 		
+		public LinkedList <E> removeFromFront()
+		{
+			return new LinkedList(Arrays.copyOfRange(this.toArray(), 1, (this.size)));
+		}
+		
+		/*
+		pop method: 
+		remove from tail method
+		then get last.
+		*/
 		
 		public LinkedList <E> removeFromTail()
 		{
 			return new LinkedList(Arrays.copyOfRange(this.toArray(), 0 , (this.size - 1)));
 		}
+		
+		public E getFirst()
+		{
+			return (E) head.getNext().getElement();
+		}
+		
 		
 		public E getLast()
 		{
@@ -134,6 +149,13 @@ public class LinkedList<E extends Comparable> {
 			should never reach this line*/
 			
 		}//end of method
+		
+	//getter methods
+		
+	public Node<E> getHead()
+	{
+		return head;
+	}
 		
 	public int getSize()
 	{
