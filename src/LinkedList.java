@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -50,15 +49,41 @@ public class LinkedList<E extends Comparable> implements Iterable<E> {
 			tempList.add(element);
 			return new LinkedList<E>(tempList);
 		}
+		
+		public LinkedList<E> AddToListusingIterator(E element)
+		{
+			Iterator<E> it = this.iterator();
+			int newSize = (this.size + 1);
+			ArrayList<E> tempList = new ArrayList<E>();
+			tempList.add(element);
+			for (int i = 1; i < newSize; i += 1) 
+			{
+				tempList.add(it.next());
+			}
+			return new LinkedList<E>(tempList);
+		}
+
 
 		
 		/*Converts LinkedList to ArrayList, first element is removed from the ArrayList,
 		then returns a new LinkedList with the ArrayList as an input*/
 		public LinkedList <E> removeFromFront()
 		{
+			if (this.size == 0)
+			{
+				System.out.println("There are no elements to remove");
+				return new LinkedList<E>();
+			}
+			else if (this.size == 1)
+			{
+				return new LinkedList<E>();
+			}
+			else
+			{
 			ArrayList<E> list = this.toArrayList();
 			ArrayList<E> smallerList = new ArrayList<E>(list.subList(1, list.size()));
 			return new LinkedList<E>(smallerList);
+			}
 		}
 		
 		
@@ -66,11 +91,23 @@ public class LinkedList<E extends Comparable> implements Iterable<E> {
 		then returns a new LinkedList with the ArrayList as an input*/
 		public LinkedList <E> removeFromTail()
 		{
+			if (this.size == 0)
+			{
+				System.out.println("There are no elements to remove");
+				return new LinkedList<E>();
+			}
+			else if (this.size == 1)
+			{
+				return new LinkedList<E>();
+			}
+			else
+			{
 			ArrayList<E> list = new ArrayList<E>();
 			ArrayList<E> smallerList = new ArrayList<E>();
 			list = this.toArrayList();
 			smallerList = new ArrayList<E>(list.subList(0, (list.size()-1)));
 			return new LinkedList<E>(smallerList);
+			}
 		}
 		
 		//returns first element from a LinkedList
@@ -132,8 +169,7 @@ public class LinkedList<E extends Comparable> implements Iterable<E> {
 		{
 			ArrayList<E> iteratorList = new ArrayList<E>();
 			iteratorList = this.toArrayList();
-			Iterator<E> it = iteratorList.iterator();
-			return it;
+			return iteratorList.iterator();
 		}
 		
 		/*This method takes in an input which is used to find a specific
@@ -147,6 +183,17 @@ public class LinkedList<E extends Comparable> implements Iterable<E> {
 				temp = temp.getNext();
 			}
 			return temp.getElement();
+		}
+		
+		public E finderusingIterator(int x)
+		{
+			Iterator<E> it = this.iterator();
+			x = inputValidation(x, 0, this.size);
+			for (int i = 0 ; i < x; i += 1)
+			{
+				it.next();
+			}
+			return (E) it.next();
 		}
 		
 		/*Method returns true if LinkedList is empty

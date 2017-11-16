@@ -1,9 +1,10 @@
+import java.util.Comparator;
 
-public class ImmutableQueue <E> {
+public class ImmutableQueue <E extends Comparable> implements Comparator<E>{
 	
 	/*dont need to return any values! */
 
-	private final LinkedList linky;
+	private final LinkedList linky; 
 	
 	//Stack constructors
 	public ImmutableQueue() //creates an empty stack
@@ -16,21 +17,45 @@ public class ImmutableQueue <E> {
 		this.linky = input;
 	}
 	
-	/*
-	//queue methods
-	public void enqueue(E input)
+	public ImmutableQueue enqueue(Comparable element)
 	{
-		this.linky = new Queue(this.linky.addToList(input));
+		return new ImmutableQueue(this.linky.AddToListusingIterator(element));
 	}
 	
-	public E dequeue() //doesnt return the dequeue value
+	/*Method removes from  end of list which contains the first stored element.
+	Queue is a First in First Out type of data structure.*/
+	public ImmutableQueue dequeue() //doesnt return the dequeue value
 	{
-		E temp = (E) this.linky.getFirstElement();
-		this.linky.removeFromFront();
-		return temp;
+		return new ImmutableQueue(this.linky.removeFromTail());
 	}
-	*/
 	
-	//public is empty()
+	//method returns true is Queue is empty and false if queue is populated
+	public Boolean isEmpty()
+	{
+		return this.linky.isEmpty();
+	}
+	
+	public Boolean equals(ImmutableQueue<E> queuey2)
+	{
+		return this.linky.isEqual(queuey2.linky);
+	}
+	
+	//method is used to retrieve any element in the stack
+	public Comparable finder(int x)
+	{
+		return this.linky.finderusingIterator(x);
+	}
+	
+	//method returns size of the ImmutableStack
+	public int getSize()
+	{
+		return this.linky.getSize();
+	}
+
+	@Override
+	public int compare(E arg0, E arg1) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }
