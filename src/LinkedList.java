@@ -1,78 +1,88 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 
-public class LinkedList<E extends Comparable> {
+//replacing all arrays with arraylists?
+
+public class LinkedList<E extends Comparable> implements Iterable<E> {
 		
+		//LinkedList fields
 		private final Node head;
 		private final int size;
 		
+		//LinkedList constructor with no arguments
 		public LinkedList ()
 		{
 			this.head = new Node<E>(null, null);
 			this.size = 0;
 		}
-
-		//note sure if this constructor is necessary
-		public LinkedList (Object element)
+		
+		//LinkedList constructor with an arrayList as an argument
+		public LinkedList (ArrayList<E> list)
 		{
-			Node<E> temp = new Node(element, null);
-			this.head = new Node<E>(null, temp);
-			this.size = 1;
+			this.head = new Node<E>(null, chelper(list));
+			this.size = list.size();
 		}
-		
-		public LinkedList (Object [] objectArray)
+				
+		/*chelper with ArrayLists. Utilizes sublist to make copies
+		of specified ranges of the ArrayList.*/
+		public Node<E> chelper(List<E> input)
 		{
-			this.head = new Node<E>(null, chelper(objectArray));
-			this.size = objectArray.length;
-		}
-		
-		
-		
-		public Node<E> chelper(Object [] input)
-		{
-			int size = input.length;
-			if (input.length == 1)
+			int size = input.size();
+			if (input.size() == 1)
 			{
-				return new Node<E>(input[0]);
+				return new Node<E>(input.get(0));
 			}
 			else
-			{
-				return new Node<E>(input[0], chelper(Arrays.copyOfRange(input, 1, input.length)));
+			{	List<E> subList = new ArrayList<E>(input.subList(1, input.size()));
+				return new Node<E>(input.get(0), chelper(subList));
 			}
-		}//end of method
-		
-		public LinkedList AddToList(Object input)
-		{
-			Node<E> temp = new Node(input, null);
-			Object[] original = this.toArray();
-			Object[] newElement = new Object[] {temp};
-			return new LinkedList<E>(addAll(original, newElement));
 		}
 		
+		/*Converts LinkedList to ArrayList, add a new element to that ArrayList,
+		then returns a new LinkedList with the ArrayList as an input.*/
+		public LinkedList<E> AddToList(E element)
+		{
+			ArrayList<E> tempList = new ArrayList<E>();
+			tempList = this.toArrayList();
+			tempList.add(element);
+			return new LinkedList<E>(tempList);
+		}
+
+		
+		/*Converts LinkedList to ArrayList, first element is removed from the ArrayList,
+		then returns a new LinkedList with the ArrayList as an input*/
 		public LinkedList <E> removeFromFront()
 		{
-			return new LinkedList(Arrays.copyOfRange(this.toArray(), 1, (this.size)));
+			ArrayList<E> list = this.toArrayList();
+			ArrayList<E> smallerList = new ArrayList<E>(list.subList(1, list.size()));
+			return new LinkedList<E>(smallerList);
 		}
 		
-		/*
-		pop method: 
-		remove from tail method
-		then get last.
-		*/
 		
+		/*Converts LinkedList to ArrayList, last element is removed from the ArrayList,
+		then returns a new LinkedList with the ArrayList as an input*/
 		public LinkedList <E> removeFromTail()
 		{
-			return new LinkedList(Arrays.copyOfRange(this.toArray(), 0 , (this.size - 1)));
+			ArrayList<E> list = new ArrayList<E>();
+			ArrayList<E> smallerList = new ArrayList<E>();
+			list = this.toArrayList();
+			smallerList = new ArrayList<E>(list.subList(0, (list.size()-1)));
+			return new LinkedList<E>(smallerList);
 		}
 		
-		public E getFirst()
+		//returns first element from a LinkedList
+		public E getFirstElement()
 		{
 			return (E) head.getNext().getElement();
 		}
 		
-		
-		public E getLast()
+		//returns last element from a LinkedList
+		public E getLastElement()
 		{
-			Node<E> temp = head.getNext();
+			Node<E> temp = head;
 			for (int i = 0; i < this.size; i += 1)
 			{
 				temp = temp.getNext();
@@ -80,46 +90,81 @@ public class LinkedList<E extends Comparable> {
 			return temp.getElement();
 		}
 		
-		//adds 2 linkedlists to create one linkedlist
+		/*Method Concatenates two LinkedLists. This method implements the 
+		toArrayList and addAllFromList methods which I have defined below.*/
 		public LinkedList<E> Add(LinkedList<E> input)
 		{
-			E[] first = this.toArray();
-			E[] second = this.toArray();
-			return new LinkedList<E>(addAll(first, second));
+			ArrayList<E> second = input.toArrayList();
+			return new LinkedList<E>(this.addAllFromList(second)); 
 		}
 		
-		
-		
-		//I don't understand this error
-		public E[] toArray()
+		//Method converts an instance of a linked list into an ArrayList
+		public ArrayList<E> toArrayList()
 		{
-			Object[] result = new Object[size];
-			Node<E> temp = head.getNext();
-			for(int i = 0; i < size; i += 1)
+			ArrayList<E> list = new ArrayList<E>();
+			Node<E> temp = this.getHead();
+			for (int i = 0; i < this.getSize(); i += 1)
 			{
-				result[i] = temp.getElement();
+				temp = temp.getNext();
+				list.add(temp.getElement());
+				
+			}
+           return list; 
+        }
+		
+		/*Method converts an instance of a linked list into an ArrayList
+		and takes in another ArrayList as an argument. The two list are concatenated
+		and returned as an ArrayList.*/
+		public ArrayList<E> addAllFromList(ArrayList<E> list2) {
+			ArrayList<E>list1 =  new ArrayList<E>();
+			list1 = this.toArrayList();
+			if (list1 == null) {
+				return list2;
+			} else if (list2 == null) {
+				return list1;
+			}
+			ArrayList<E> joinedList = new ArrayList<E>(list1); //initialized with values from list1
+			joinedList.addAll(list2); //addAll is an ArrayList method.
+			return joinedList;
+		}
+		
+		public Iterator<E> iterator()
+		{
+			ArrayList<E> iteratorList = new ArrayList<E>();
+			iteratorList = this.toArrayList();
+			Iterator<E> it = iteratorList.iterator();
+			return it;
+		}
+		
+		/*This method takes in an input which is used to find a specific
+		element within a LinkedList*/
+		public E finder(int x)
+		{
+			x = inputValidation(x, 0, this.size);
+			Node<E> temp = this.getHead();
+			for(int i = 0; i <= x; i += 1)
+			{
 				temp = temp.getNext();
 			}
-			return E[] result;
+			return temp.getElement();
 		}
 		
-		
-		
-		
-		
-		//copied from apache commons-lang could not download
-		public Object[] addAll(Object[] array1, Object[] array2) {
-			if (array1 == null) {
-				return array2;
-			} else if (array2 == null) {
-				return array1;
+		/*Method returns true if LinkedList is empty
+		 * and false if LinkedList is populated*/
+		public boolean isEmpty()
+		{
+			if(this.getSize() > 0)
+			{
+				return false;
 			}
-			Object joinedArray = new Object[array1.length + array2.length];
-			System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-			System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-			return (E[]) joinedArray;
+			else 
+			{
+				return true;
+			}
 		}
 		
+		/* Method returns true if two LinkedList are equivalent
+		 * returns falls if they are not equivalent.*/
 		public boolean isEqual(LinkedList<E> input)
 		{
 			if (this.size == input.size)
@@ -144,14 +189,24 @@ public class LinkedList<E extends Comparable> {
 			{
 				return false;
 			}
-			
-			/*had to put another return statement for method to run
-			should never reach this line*/
-			
 		}//end of method
-		
+            
+	/*This method tests if an input is within certain boundaries.
+	 * if the input is not within the boundaries the user is given
+	 * the opportunity to input a new value.*/
+    public int inputValidation(int x, int min, int max)
+	{
+		Scanner input = new Scanner(System.in);
+		while (x >= max || x < min)
+		{
+			System.out.println("Invalid index, try entering a new index value.");
+			System.out.print("Index value: ");
+			x = input.nextInt();
+		}
+		return x;
+	}
+
 	//getter methods
-		
 	public Node<E> getHead()
 	{
 		return head;

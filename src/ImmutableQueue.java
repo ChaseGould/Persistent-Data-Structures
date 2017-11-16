@@ -1,5 +1,7 @@
 
 public class ImmutableQueue <E> {
+	
+	/*dont need to return any values! */
 
 	private final LinkedList linky;
 	
@@ -9,37 +11,26 @@ public class ImmutableQueue <E> {
 		this.linky = new LinkedList();
 	}
 	
-	public ImmutableQueue(Object element) //creates an empty stack
+	public ImmutableQueue(LinkedList input)
 	{
-		this.linky = new LinkedList(element);
+		this.linky = input;
 	}
 	
-	public ImmutableQueue(Object[] objectArray)
-	{
-		this.linky = new LinkedList(objectArray);
-	}
-	
+	/*
 	//queue methods
 	public void enqueue(E input)
 	{
-		this.linky.AddToList(input);
+		this.linky = new Queue(this.linky.addToList(input));
 	}
 	
 	public E dequeue() //doesnt return the dequeue value
 	{
-		E temp = (E) this.linky.getFirst();
+		E temp = (E) this.linky.getFirstElement();
 		this.linky.removeFromFront();
 		return temp;
 	}
+	*/
 	
-	public E front()
-	{
-		return (E) this.linky.getFirst();
-	}
-	
-	public E back()
-	{
-		return (E) this.linky.getLast();
-	}
+	//public is empty()
 	
 }

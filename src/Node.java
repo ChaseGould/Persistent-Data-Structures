@@ -19,10 +19,7 @@ public class Node <E extends Comparable> implements Comparable <Node<E>>{
 	{
 		return this.element.compareTo(input.getElement());
 	}
-	
-	
-	
-	
+		
 	//getters
 	public E getElement()
 	{
